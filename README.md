@@ -1,6 +1,8 @@
 # Simple Registration
 Simple Registration serves as registration site using **Blazor Server Side** for your game (test) servers.
 
+![preview_green](docs/preview_green.jpg)
+
 ### License, Copyright & Contributions
 Please see our Open Source project [Documentation Repo](https://github.com/Arctium/Documentation)
 
