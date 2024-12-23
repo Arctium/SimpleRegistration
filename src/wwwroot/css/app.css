@@ -1,0 +1,119 @@
+/*
+    Copyright (c) Arctium.
+    Licensed under the MIT license. See LICENSE file in the project root for full license information.
+*/
+
+
+html, body
+{
+    overflow-x: hidden;
+}
+
+:root,
+.theme-amber
+{
+    --primary-color: #F39C12;
+    --primary-color-rgb: 243, 156, 18;
+    --primary-hover-color: #D88A0D;
+    --button-font-color: #111827;
+    --gradient-color-1: var(--primary-color);
+    --gradient-color-2: #8E44AD;
+    --gradient-color-3: #8E44AD;
+    --gradient-color-4: var(--primary-color);
+}
+
+.theme-green
+{
+    --primary-color: #22C55E;
+    --primary-color-rgb: 34, 197, 94;
+    --primary-hover-color: #16A34A;
+    --button-font-color: #FFFFFF;
+    --gradient-color-1: #80ffd7;
+    --gradient-color-2: #21b874;
+    --gradient-color-3: #ff80b5;
+    --gradient-color-4: #9089fc;
+}
+
+button
+{
+    background-color: var(--primary-color);
+    color: var(--button-font-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+    button:hover
+    {
+        background-color: var(--primary-hover-color);
+    }
+
+    button:active
+    {
+        transform: translateY(1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+a
+{
+    color: var(--button-color);
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+a
+{
+    color: var(--primary-color);
+    transition: color 0.2s ease;
+}
+
+    a:hover
+    {
+        color: var(--primary-hover-color);
+    }
+
+input
+{
+    background: rgba(31, 41, 55, 0.8);
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    input:focus
+    {
+        border-color: rgba(var(--primary-color-rgb), 0.75);
+        box-shadow: 0 0 0 0.5px rgba(var(--primary-color-rgb), 0.75);
+        outline: none;
+    }
+
+.glass-bg
+{
+    background-color: rgba(31, 41, 55, 0.8);
+    backdrop-filter: blur(6px);
+}
+
+.bg-noise
+{
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.02) 1%, transparent 1%);
+    background-size: 4px 4px;
+}
+
+.validation-message
+{
+    color: #ff5861;
+}
+
+#milliseconds
+{
+    padding-right: 35px;
+}
+
+.dev-suffix
+{
+    position: absolute;
+    top: 0;
+    right: 10px;
+}

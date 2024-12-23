@@ -1,0 +1,43 @@
+﻿<!--
+// Copyright (c) Arctium.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+-->
+@using Arctium.SimpleRegistration.Components.Static
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+@attribute [StreamRendering]
+
+@if (_availableServers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else @if (Configuration.GetValue<bool>("ShowServers") && _availableServers.Count > 0)
+{
+    <div class="mt-8 w-96 lg:block">
+        <h3 class="text-slate-300 mb-2 text-left text-xl font-medium">Available Servers</h3>
+
+        <div class="gap-4 flex flex-wrap">
+            @foreach (var server in _availableServers)
+            {
+                <div class="bg-gray-700 p-4 w-44 glass-bg from-gray-800 to-gray-900 border-gray-700 relative rounded-lg border bg-gradient-to-br opacity-95 shadow hover:shadow-lg">
+                    <p class="text-slate-300 break-words font-semibold">@server.ServerName</p>
+                    <p class="text-gray-400 text-sm">Patch: @server.Patch</p>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code
+{
+    List<ServerInfo> _availableServers = [];
+
+    protected override void OnInitialized()
+    {
+        // Load available servers from appsettings.json
+        _availableServers = Configuration.GetSection("AvailableServers").Get<List<ServerInfo>>() ?? [];
+    }
+
+    public record struct ServerInfo(string ServerName, string Patch);
+}

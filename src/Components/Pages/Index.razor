@@ -1,0 +1,35 @@
+﻿<!--
+// Copyright (c) Arctium.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+-->
+@page "/"
+
+@using Arctium.SimpleRegistration.Components.Interactive
+@using Arctium.SimpleRegistration.Components.Static
+
+@inject IConfiguration Configuration
+
+<div class="text-slate-200 flex min-h-screen flex-col items-center justify-start" style="padding-top: 2rem;">
+    <h1 class="text-center text-3xl font-medium" style="margin-bottom: 16px; font-size: 2.45rem; outline: none;">
+        @((MarkupString)Configuration["SiteTitle"]!)
+    </h1>
+
+    <div class="flex flex-col lg:flex-row lg:space-x-8">
+        <div class="mt-8 w-96">
+            <h2 class="mb-2 text-slate-300 text-left text-xl font-medium">Register</h2>
+
+            <RegistrationForm />
+
+            <h3 class="mt-4 text-1xl mb-2 w-96 text-slate-400 text-center font-bold">
+                Please note: All servers hosted here are for educational and testing purposes only, strictly intended to support learning and experimentation.
+            </h3>
+        </div>
+        <ServerList />
+    </div>
+
+    <Disclaimer />
+
+    <p class="mt-2 text-slate-400 text-center text-xs leading-5">
+        &copy; 2024 Arctium
+    </p>
+</div>

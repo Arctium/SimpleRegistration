@@ -1,0 +1,11 @@
+﻿<!--
+// Copyright (c) Arctium.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+-->
+@inject IConfiguration Configuration
+
+<div class="mt-10 space-x-10 text-slate-400 flex max-w-screen-md justify-center text-center text-xs">
+    <p class="mt-10 text-slate-400 text-center text-xs leading-5">
+        @((MarkupString)Configuration["Disclaimer"]!)
+    </p>
+</div>

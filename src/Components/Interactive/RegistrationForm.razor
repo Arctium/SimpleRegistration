@@ -1,0 +1,113 @@
+﻿<!--
+// Copyright (c) Arctium.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+-->
+@using Arctium.SimpleRegistration.Components.Static
+@using Arctium.SimpleRegistration.Models
+@using Arctium.SimpleRegistration.Services
+@using System.ComponentModel.DataAnnotations
+
+@inject ILogger<RegistrationForm> _logger
+@inject IConfiguration _configuration
+@inject IRegistrationService _registrationService
+
+@rendermode InteractiveServer
+
+<EditForm FormName="RegisterForm" EditContext="@_editContext" OnValidSubmit="Register" id="RegisterForm"
+          class="bg-gray-800 p-8 space-y-4 glass-bg from-gray-800 to-gray-900 border-gray-700 relative rounded-lg border bg-gradient-to-br shadow-2xl">
+    <DataAnnotationsValidator />
+
+    <div class="inset-0 bg-noise pointer-events-none absolute rounded-lg opacity-5"></div>
+    <div>
+        <label for="_userName" class="mb-2 block">Username</label>
+        <div class="relative flex items-center justify-end">
+            <input type="text" @bind-value="_registrationDataModel!.UserName" placeholder="Enter your username" />
+            <span class="mr-2 w-10 absolute">@_configuration["RegistrationSettings:UserNameSuffix"]</span>
+        </div>
+        <ValidationMessage For="@(() => _registrationDataModel!.UserName)" />
+    </div>
+
+    <div>
+        <label for="password" class="mb-2 block">Password</label>
+        <input type="password" @bind-value="_registrationDataModel!.Password" placeholder="Enter your password" />
+        <ValidationMessage For="@(() => _registrationDataModel!.Password)" />
+    </div>
+
+    <div>
+        <label for="passwordConfirm" class="mb-2 block">Confirm Password</label>
+        <input type="password" @bind-value="_registrationDataModel!.PasswordConfirmation" placeholder="Confirm your password" />
+        <ValidationMessage For="@(() => _registrationDataModel!.PasswordConfirmation)" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(_configuration["PrivacyPolicyLink"]))
+    {
+        <div class="flex items-center">
+            <input type="checkbox" @bind-value="_registrationDataModel!.PrivacyPolicyAccepted" id="privacyPolicy" class="mr-2" />
+            <label for="privacyPolicy">
+                I agree to the
+                <a href="@_configuration["PrivacyPolicyLink"]" target="_blank" class="underline">
+                    Privacy Policy
+                </a>
+            </label>
+        </div>
+        <ValidationMessage For="@(() => _registrationDataModel!.PrivacyPolicyAccepted)" />
+    }
+
+    <button type="submit" class="p-2 w-full rounded">Register</button>
+
+    @if (_registerResponseMessageOpen)
+    {
+        var borderColor = _registrationSuccess ? "border-green-700" : "border-rose-700";
+
+        var classText = $"h-* w-96 m-2 text-slate-200 from-gray-800 to-gray-900 {borderColor} opacity-99 relative rounded-lg border-2 bg-gradient-to-br font-normal";
+        <FluentPopover AnchorId="RegisterForm" @bind-Open="_registerResponseMessageOpen"
+                       VerticalPosition="VerticalPosition.Bottom" HorizontalPosition="HorizontalPosition.Center" AutoFocus="false"
+                       Class="@classText">
+            <Header>
+                <div>Registration @(_registrationSuccess ? "successful" : "error")!</div>
+            </Header>
+            <Body>
+                <div>
+                    @(_registrationSuccess ? "Login with: " : string.Empty)
+                    <div class="inline font-medium">
+                        @_registrationResultMessage
+                    </div>
+                </div>
+            </Body>
+        </FluentPopover>
+    }
+
+    <ConfigInstructions />
+</EditForm>
+
+@code
+{
+    [SupplyParameterFromForm(FormName = "RegisterForm")]
+    RegistrationData _registrationDataModel { get; set; }
+
+    EditContext _editContext;
+    bool _registerResponseMessageOpen;
+    bool _registrationSuccess;
+    string _registrationResultMessage;
+
+    protected override void OnInitialized()
+    {
+        _registrationDataModel ??= new();
+        _editContext ??= new EditContext(_registrationDataModel);
+    }
+
+    async Task Register()
+    {
+        _registerResponseMessageOpen = false;
+
+        _logger.LogInformation("New registration request with UserName = {UserName}", _registrationDataModel.UserName);
+
+        var userNameSuffix = _configuration["RegistrationSettings:UserNameSuffix"] ?? string.Empty;
+        var registrationResult = await _registrationService.RegisterAsync(_registrationDataModel, userNameSuffix);
+
+        _registrationSuccess = registrationResult.Success;
+        _registrationResultMessage = registrationResult.ErrorMessage;
+
+        _registerResponseMessageOpen = true;
+    }
+}

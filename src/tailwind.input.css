@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@layer components
+{
+    input[type="text"],
+    input[type="password"]
+    {
+        @apply w-full p-2 rounded bg-gray-700 focus:outline-none appearance-none transition duration-150;
+    }
+}
+
+@layer utilities
+{
+    @keyframes fadeOut
+    {
+        0%
+        {
+        }
+
+        100%
+        {
+            background-color: transparent;
+            display: none;
+        }
+    }
+
+    .animate-fade
+    {
+        animation: fadeOut 5s ease-in-out;
+        animation-fill-mode: forwards; /* Ensures the element stays hidden after animation */
+    }
+}
