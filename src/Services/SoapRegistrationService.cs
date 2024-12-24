@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -51,17 +52,19 @@ class SoapRegistrationService(IHttpClientFactory httpClientFactory, IConfigurati
         {
             using HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            if (!httpResponseMessage.IsSuccessStatusCode)
-                return (Success: false, httpResponseMessage.ReasonPhrase);
-
             var soapResponseContent = await httpResponseMessage.Content.ReadAsStringAsync();
             var soapResponseDocument = XDocument.Parse(soapResponseContent);
+            var resultElementTag = httpResponseMessage.IsSuccessStatusCode ? "result" : "faultstring";
 
-            return (Success: true, soapResponseDocument.Descendants("result").FirstOrDefault()?.Value);
+            return (httpResponseMessage.IsSuccessStatusCode, soapResponseDocument.Descendants(resultElementTag).FirstOrDefault()?.Value);
         }
         catch (HttpRequestException e)
         {
             return (Success: false, e.HttpRequestError.ToString());
+        }
+        catch (XmlException)
+        {
+            return (Success: false, "Malformed answer from the server");
         }
         catch (TaskCanceledException)
         {
