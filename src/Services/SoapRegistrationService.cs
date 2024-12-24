@@ -1,4 +1,4 @@
-﻿// Copyright (c) Arctium.
+// Copyright (c) Arctium.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Text;
@@ -17,9 +17,9 @@ class SoapRegistrationService(IHttpClientFactory httpClientFactory, IConfigurati
 
     public async Task<(bool Success, string ErrorMessage)> RegisterAsync(RegistrationData registrationData, string userNameSuffix)
     {
-        using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, string.Empty);
+        using var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, string.Empty);
 
-        httpRequestMessage.Headers.Authorization = new("Basic", _configuration[$"{nameof(SoapRegistrationService)}:Credentials"]);
+        httpRequestMessage.Headers.Authorization = new("Basic", _configuration[$"{nameof(SoapRegistrationService)}:HttpClientSettings:Credentials"]);
 
         using (var soapRequestWriter = new StringWriter())
         {
@@ -38,10 +38,10 @@ class SoapRegistrationService(IHttpClientFactory httpClientFactory, IConfigurati
 
             soapRequestSerializer.Serialize(soapRequestWriter, envelope);
 
-            httpRequestMessage.Content = new StringContent(soapRequestSerializer.ToString()!, Encoding.UTF8, "application/xml");
+            httpRequestMessage.Content = new StringContent(soapRequestWriter.ToString()!, Encoding.UTF8, "application/xml");
         }
 
-        using var httpClient = _httpClientFactory.CreateClient(nameof(SoapRegistrationService));
+        using HttpClient httpClient = _httpClientFactory.CreateClient(nameof(SoapRegistrationService));
 
         var requestTimeout = int.Parse(_configuration["SoapRegistrationService:HttpClientSettings:Timeout"]);
 
@@ -65,7 +65,7 @@ class SoapRegistrationService(IHttpClientFactory httpClientFactory, IConfigurati
         }
         catch (TaskCanceledException)
         {
-            return (Success: true, "Timeout! Please try again later");
+            return (Success: false, "Timeout! Please try again later");
         }
     }
 }
