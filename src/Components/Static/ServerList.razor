@@ -4,6 +4,8 @@
 -->
 @using Arctium.SimpleRegistration.Components.Static
 @using Microsoft.Extensions.Configuration
+@using System.Net.Sockets
+@using System.Net
 
 @inject IConfiguration Configuration
 @attribute [StreamRendering]
@@ -23,6 +25,15 @@ else @if (Configuration.GetValue<bool>("ShowServers") && _availableServers.Count
                 <div class="bg-gray-700 p-4 w-44 glass-bg from-gray-800 to-gray-900 border-gray-700 relative rounded-lg border bg-gradient-to-br opacity-95 shadow hover:shadow-lg">
                     <p class="text-slate-300 break-words font-semibold">@server.ServerName</p>
                     <p class="text-gray-400 text-sm">Patch: @server.Patch</p>
+                    @if (server.OnlineCheckEnabled)
+                    {
+                        <p class="mt-2 text-xs">
+                            Status:
+                            <span class="@(server.IsOnline ? "text-green-400" : "text-red-400")">
+                                @(server.IsOnline ? "Online" : "Offline")
+                            </span>
+                        </p>
+                    }
                 </div>
             }
         </div>
@@ -33,11 +44,37 @@ else @if (Configuration.GetValue<bool>("ShowServers") && _availableServers.Count
 {
     List<ServerInfo> _availableServers = [];
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Load available servers from appsettings.json
         _availableServers = Configuration.GetSection("AvailableServers").Get<List<ServerInfo>>() ?? [];
+
+        // TODO: We might want to add a separate service for this.
+        // For testing purposes we'll keep it for now.
+        foreach (var server in _availableServers)
+        {
+            if (!server.OnlineCheckEnabled)
+                continue;
+
+            try
+            {
+                using var tcpClient = new TcpClient();
+
+                tcpClient.SendTimeout = 500;
+
+                await tcpClient.ConnectAsync(server.ServerAddress, server.ServerPort);
+
+                server.IsOnline = true;
+            }
+            catch
+            {
+                server.IsOnline = false;
+            }
+        }
     }
 
-    public record struct ServerInfo(string ServerName, string Patch);
+    public record class ServerInfo(string ServerName, string Patch, bool OnlineCheckEnabled = false,
+                                   string ServerAddress = "", int ServerPort = 0)
+    {
+        public bool IsOnline { get; set; }
+    }
 }

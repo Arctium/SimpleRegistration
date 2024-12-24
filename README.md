@@ -1,6 +1,8 @@
 # Simple Registration
 Simple Registration serves as registration site using **Blazor Server Side** for your game (test) servers.
 
+**Note: Everything is still Work in Progress, so expect changes to configuration options and other things!**
+
 ![preview_green](docs/preview_green.jpg)
 
 ### License, Copyright & Contributions
@@ -54,6 +56,9 @@ Configuration happens in the shipped `appsettings.json`.
 #### AvailableServers
 * **ServerName**: Title of the server in the list.
 * **Patch**: Required game client version to use the server.
+* **OnlineCheckEnabled**: Enables a TCP connection check to given `ServerAddress` & `ServerPort`
+* **ServerAddress**: The game server IP address. **Only used for online checks**
+* **ServerPort**: The game server port. **Only usedfor online checks**
 
 ### Registration Services
 The app supports multiple registration providers, such as SOAP (used for [TrinityCore](https://github.com/TrinityCore/TrinityCore)) for testing purposes. You can easily switch between these in the configuration.
