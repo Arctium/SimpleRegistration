@@ -17,10 +17,10 @@ Please see our Open Source project [Documentation Repo](https://github.com/Arcti
 
 ### Build Prerequisites
 * [.NET 9 SDK or later](https://dotnet.microsoft.com/download/dotnet/9.0)
-* Optional: [Tailwind CSS 4.0 (Beta)](https://tailwindcss.com/docs/v4-beta). This is only required to generate new css files for custom styles/themes.
+* Optional: [Tailwind CSS 4.x](https://tailwindcss.com/docs/installation/tailwind-cli). This is only required to generate new css files for custom styles/themes.
 
 If customization is required install Tailwind CSS using in the source folder:
-* `npm install tailwindcss@next @tailwindcss/cli@next`
+* `npm install tailwindcss @tailwindcss/cli`
 
 To generate a new `tailwind.css` file execute this in the source folder:
 * `npx @tailwindcss/cli -i tailwind.input.css -o wwwroot/css/tailwind.css`
