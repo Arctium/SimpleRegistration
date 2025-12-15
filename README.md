@@ -16,7 +16,7 @@ Please see our Open Source project [Documentation Repo](https://github.com/Arcti
 * The option to add a disclaimer & privacy policy.
 
 ### Build Prerequisites
-* [.NET 9 SDK or later](https://dotnet.microsoft.com/download/dotnet/9.0)
+* [.NET 10 SDK or later](https://dotnet.microsoft.com/download/dotnet/10.0)
 * Optional: [Tailwind CSS 4.x](https://tailwindcss.com/docs/installation/tailwind-cli). This is only required to generate new css files for custom styles/themes.
 
 If customization is required install Tailwind CSS using in the source folder:
